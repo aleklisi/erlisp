@@ -45,11 +45,14 @@
     <Compile Include="FoundKeyWord.cs" />
     <Compile Include="IKeyWords.cs" />
     <Compile Include="IKeyWord\ClosingBracket.cs" />
+    <Compile Include="IKeyWord\Comparator.cs" />
     <Compile Include="IKeyWord\Floats.cs" />
     <Compile Include="IKeyWord\Integers.cs" />
+    <Compile Include="IKeyWord\MatemticalOperator.cs" />
     <Compile Include="IKeyWord\OpeningBracket.cs" />
     <Compile Include="IKeyWord\WhiteSpaces.cs" />
     <Compile Include="LispScaner.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IKeyWord\Strings.cs" />

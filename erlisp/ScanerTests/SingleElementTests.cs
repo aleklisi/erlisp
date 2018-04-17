@@ -38,6 +38,19 @@ namespace ScanerTests
         [TestCase("(", "OpeningBracket")]
 
         [TestCase(")", "ClosingBracket")]
+
+        [TestCase("+", "MatemticalOperator")]
+        [TestCase("-", "MatemticalOperator")]
+        [TestCase("/", "MatemticalOperator")]
+        [TestCase("*", "MatemticalOperator")]
+
+        [TestCase(">", "Comparator")]
+        [TestCase("=", "Comparator")]
+        [TestCase("<", "Comparator")]
+        [TestCase(">=", "Comparator")]
+        [TestCase("<=", "Comparator")]
+        [TestCase("/=", "Comparator")]
+
         public void TokenRecognizedCorrectly(string input, string tokenName)
         {
             var skaner = new LispScaner(input);

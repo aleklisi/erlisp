@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace erlisp
 {
@@ -23,7 +22,6 @@ namespace erlisp
             }
             Console.ReadKey();
 
-            Console.ReadKey();
         }
         static void PrintResults(IEnumerable<FoundKeyWord> keyWords)
         {
