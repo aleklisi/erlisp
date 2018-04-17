@@ -17,6 +17,7 @@ namespace erlisp
             new Comparator(),
             new MatemticalOperator()
         };
+
         private static readonly List<IKeyWords> Expressions = new List<IKeyWords>
         {
             new Integers(),
@@ -79,9 +80,8 @@ namespace erlisp
 
             if (!IsFunction(skanedProgram)) return false;
 
-            if (skanedProgram[0].KeyWordType.KeyWordName() != "ClosingBracket") return false;
-
-            return true;
+            RemoveOptionalWhitespaces(skanedProgram);
+            return skanedProgram[0].KeyWordType.KeyWordName() == "ClosingBracket";
         }
 
         static void RemoveOptionalWhitespaces(List<FoundKeyWord> skanedProgram)

@@ -8,7 +8,7 @@ namespace erlisp
         public static void Main()
         {
             Console.WriteLine("Skaner Started!!!");
-            var textFromFile = "(write (if 1 2 3)";
+            var textFromFile = "(write ( if   1 2 3    )";
             var testSkaner = new LispScaner(textFromFile);
 
             try

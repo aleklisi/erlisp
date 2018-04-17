@@ -4,7 +4,6 @@ using NUnit.Framework;
 
 namespace ScanerTests
 {
-    
     public class SkanerTests
     {
         [TestCase("\"\"", "Strings")]
