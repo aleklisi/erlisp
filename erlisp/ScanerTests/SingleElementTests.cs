@@ -49,7 +49,13 @@ namespace ScanerTests
         [TestCase("<", "Comparator")]
         [TestCase(">=", "Comparator")]
         [TestCase("<=", "Comparator")]
-        [TestCase("/=", "Comparator")]
+
+        [TestCase("if", "IfStatment")]
+        [TestCase("If", "IfStatment")]
+        [TestCase("IF", "IfStatment")]
+
+        [TestCase("write", "Write")]
+
 
         public void TokenRecognizedCorrectly(string input, string tokenName)
         {

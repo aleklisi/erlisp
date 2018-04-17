@@ -2,6 +2,7 @@
 {
     class Comparator : IKeyWords
     {
+        
         public bool IsPartialMatch(string input)
         {
             switch (input)

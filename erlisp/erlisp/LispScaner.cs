@@ -17,7 +17,9 @@ namespace erlisp
             new OpeningBracket(),
             new ClosingBracket(),
             new MatemticalOperator(),
-            new Comparator()
+            new Comparator(),
+            new IfStatment(),
+            new Write()
 
         };
         private string _input;
