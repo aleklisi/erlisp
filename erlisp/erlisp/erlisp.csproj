@@ -44,6 +44,9 @@
   <ItemGroup>
     <Compile Include="FoundKeyWord.cs" />
     <Compile Include="IKeyWords.cs" />
+    <Compile Include="IKeyWord\Floats.cs" />
+    <Compile Include="IKeyWord\Integers.cs" />
+    <Compile Include="IKeyWord\WhiteSpaces.cs" />
     <Compile Include="LispScaner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

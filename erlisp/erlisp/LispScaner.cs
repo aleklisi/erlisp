@@ -10,7 +10,10 @@ namespace erlisp
     {
         private readonly List<IKeyWords> _allPossibleKeywordsList = new List<IKeyWords>
         {
-            new Strings()
+            new Strings(),
+            new Integers(),
+            new Floats(),
+            new WhiteSpaces()
 
         };
         private string _input;
