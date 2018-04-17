@@ -13,7 +13,9 @@ namespace erlisp
             new Strings(),
             new Integers(),
             new Floats(),
-            new WhiteSpaces()
+            new WhiteSpaces(),
+            new OpeningBracket(),
+            new ClosingBracket()
 
         };
         private string _input;

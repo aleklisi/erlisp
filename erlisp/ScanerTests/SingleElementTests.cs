@@ -35,6 +35,9 @@ namespace ScanerTests
         [TestCase("\t\t\t\t ", "WhiteSpaces")]
         [TestCase("\n\n\n\n", "WhiteSpaces")]
 
+        [TestCase("(", "OpeningBracket")]
+
+        [TestCase(")", "ClosingBracket")]
         public void TokenRecognizedCorrectly(string input, string tokenName)
         {
             var skaner = new LispScaner(input);
