@@ -47,7 +47,7 @@ namespace erlisp
 
         private static bool IsNonFoldFunction(List<FoundKeyWord> skanedProgram)
         {
-            var keyWordName = skanedProgram[0].KeyWordType.KeyWordName();
+            var keyWordName = skanedProgram[0].GetKeyWordName();
             var numberOfArguments = -1;
             foreach (var function in NonFoldFunctions)
             {
@@ -80,7 +80,7 @@ namespace erlisp
         static bool IsExpression(List<FoundKeyWord> skanedProgram)
         {
 
-            var keyWordName = skanedProgram[0].KeyWordType.KeyWordName();
+            var keyWordName = skanedProgram[0].GetKeyWordName();
             if (Expressions.Any(x => x.KeyWordName() == keyWordName))
             {
                 skanedProgram.RemoveAt(0);
@@ -94,11 +94,11 @@ namespace erlisp
         {
             RemoveOptionalWhitespaces(skanedProgram);
 
-            if (skanedProgram[0].KeyWordType.KeyWordName() != "OpeningBracket") return false;
+            if (skanedProgram[0].GetKeyWordName() != "OpeningBracket") return false;
             skanedProgram.RemoveAt(0);
             RemoveOptionalWhitespaces(skanedProgram);
 
-            if (skanedProgram[0].KeyWordType.KeyWordName() == "ClosingBracket")
+            if (skanedProgram[0].GetKeyWordName() == "ClosingBracket")
             {
                 skanedProgram.RemoveAt(0);
                 return true;
@@ -107,7 +107,7 @@ namespace erlisp
             if (!IsFunction(skanedProgram)) return false;
 
             RemoveOptionalWhitespaces(skanedProgram);
-            if (skanedProgram[0].KeyWordType.KeyWordName() == "ClosingBracket")
+            if (skanedProgram[0].GetKeyWordName() == "ClosingBracket")
             {
                 skanedProgram.RemoveAt(0);
                 return true;
@@ -117,7 +117,7 @@ namespace erlisp
 
         static void RemoveOptionalWhitespaces(List<FoundKeyWord> skanedProgram)
         {
-            if (skanedProgram[0].KeyWordType.KeyWordName() == "WhiteSpaces") skanedProgram.RemoveAt(0);
+            if (skanedProgram[0].GetKeyWordName() == "WhiteSpaces") skanedProgram.RemoveAt(0);
         }
 
         public static bool Parse(List<FoundKeyWord> skanedProgram)
