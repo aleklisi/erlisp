@@ -11,6 +11,7 @@ namespace erlisp
     {
         private static List<FoundKeyWord> tokenzedProgram = new List<FoundKeyWord>();
         public static int FunCounter;
+        public static int StackCounter;
 
         public static void AddNextToken(FoundKeyWord token)
         {
@@ -65,14 +66,22 @@ namespace erlisp
                 case "EndOfCode":
                     return "." + Environment.NewLine;
                 case "ClosingBracket":
+                    StackCounter--;
                     return "])";
                 case "Float":
                     return tokenPattern;
                 case "Integer":
                     return tokenPattern;
                 case "OpeningBracket":
-                    FunCounter++;
-                    return "fun" + FunCounter + "() -> ";
+                {
+                    if (StackCounter++ == 0)
+                        {
+                            FunCounter++;
+                            return "fun" + FunCounter + "() -> ";
+                        }
+
+                    return "";
+                }
                 case "Write":
                     return "write([";
                 default:
