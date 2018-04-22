@@ -9,7 +9,7 @@ namespace erlisp
         public static void Main()
         {
             Console.WriteLine("Skaner Started!!!");
-            var textFromFile = "   (+ 1 2 3 4 (- 1 2 3))(write 2)";
+            var textFromFile = "(+ 1 2 3)";
             var testSkaner = new LispScaner(textFromFile);
 
             try
@@ -23,6 +23,7 @@ namespace erlisp
                 Console.WriteLine("Parser result is: " + parsed);
                 Console.WriteLine("Parser  Finished!!!");
                 PrintResults(CodeGenerator.GetTokenizedProgram());
+                Console.WriteLine(CodeGenerator.GenerateCode());
             }
             catch (Exception e)
             {
