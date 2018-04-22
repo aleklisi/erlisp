@@ -51,6 +51,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeGeneratorTests.cs" />
     <Compile Include="ParserTests.cs" />
     <Compile Include="SingleElementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
