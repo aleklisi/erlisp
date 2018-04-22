@@ -8,13 +8,13 @@ namespace erlisp
         public static void Main()
         {
             Console.WriteLine("Skaner Started!!!");
-            var textFromFile = "(write (if ( write 2) 2 3)) (write 2)";
+            var textFromFile = "(if () 1 (+ 2 3))";
             var testSkaner = new LispScaner(textFromFile);
 
             try
             {
                 var result = testSkaner.TokenizeInput();
-                PrintResults(result);
+                //PrintResults(result);
                 Console.WriteLine("Skaner Finished!!!");
                 Console.WriteLine("Parser Started!!!");
                 var parsed = Parser.Parse(result);
