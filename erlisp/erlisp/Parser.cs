@@ -12,11 +12,11 @@ namespace erlisp
             new IfStatment()
         };
 
-        private static readonly List<IKeyWords> FunctionsRangeNumberOfArguments = new List<IKeyWords>
-        {
-            new Comparator(),
-            new MatemticalOperator()
-        };
+        //private static readonly List<IKeyWords> FunctionsRangeNumberOfArguments = new List<IKeyWords>
+        //{
+        //    new Comparator(),
+        //    new MatemticalOperator()
+        //};
 
         private static readonly List<IKeyWords> Expressions = new List<IKeyWords>
         {
@@ -81,7 +81,12 @@ namespace erlisp
             if (!IsFunction(skanedProgram)) return false;
 
             RemoveOptionalWhitespaces(skanedProgram);
-            return skanedProgram[0].KeyWordType.KeyWordName() == "ClosingBracket";
+            if (skanedProgram[0].KeyWordType.KeyWordName() == "ClosingBracket")
+            {
+                skanedProgram.RemoveAt(0);
+                return true;
+            }
+            return false;
         }
 
         static void RemoveOptionalWhitespaces(List<FoundKeyWord> skanedProgram)
@@ -91,7 +96,11 @@ namespace erlisp
 
         internal static bool Parse(List<FoundKeyWord> skanedProgram)
         {
-            return IsList(skanedProgram);
+            while (skanedProgram.Any())
+            {
+                if (!IsList(skanedProgram)) return false;
+            }
+            return true;
         }
     }
 }
