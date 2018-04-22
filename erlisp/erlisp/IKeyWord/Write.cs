@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace erlisp.IKeyWord
 {
@@ -32,9 +31,5 @@ namespace erlisp.IKeyWord
             return 1;
         }
 
-        public Tuple<int, int> RangeOfArguments()
-        {
-            return new Tuple<int, int>(1,1);
-        }
     }
 }

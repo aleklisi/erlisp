@@ -14,7 +14,7 @@ namespace erlisp
             try
             {
                 var result = testSkaner.TokenizeInput();
-                //PrintResults(result);
+                PrintResults(result);
                 Console.WriteLine("Skaner Finished!!!");
                 Console.WriteLine("Parser Started!!!");
                 var parsed = Parser.Parse(result);
@@ -30,7 +30,7 @@ namespace erlisp
 
         }
 
-        static void PrintResults(IEnumerable<FoundKeyWord> keyWords)
+        private static void PrintResults(IEnumerable<FoundKeyWord> keyWords)
         {
             foreach (var keyWord in keyWords)
             {
