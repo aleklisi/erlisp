@@ -5,22 +5,24 @@ namespace erlisp
 {
     class Program
     {
+
         public static void Main()
         {
             Console.WriteLine("Skaner Started!!!");
-            var textFromFile = "(if () 1 (+ 2 3))";
+            var textFromFile = "   (+ 1 2 3 4 (- 1 2 3))(write 2)";
             var testSkaner = new LispScaner(textFromFile);
 
             try
             {
-                var result = testSkaner.TokenizeInput();
-                PrintResults(result);
+                var tokenizeInput = testSkaner.TokenizeInput();
+
+                //PrintResults(tokenizeInput);
                 Console.WriteLine("Skaner Finished!!!");
                 Console.WriteLine("Parser Started!!!");
-                var parsed = Parser.Parse(result);
+                var parsed = Parser.Parse(tokenizeInput);
                 Console.WriteLine("Parser result is: " + parsed);
                 Console.WriteLine("Parser  Finished!!!");
-
+                PrintResults(CodeGenerator.GetTokenizedProgram());
             }
             catch (Exception e)
             {

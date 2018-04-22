@@ -1,19 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using erlisp.IKeyWord;
+using erlisp.IKeyWord.HelperKeyWord;
 
 namespace erlisp
 {
     public class Parser
     {
-        private static readonly List<IFunction> NonFoldFunctions = new List<IFunction>
+
+        private static readonly List<IKeyWords> Functions = new List<IKeyWords>
         {
             new Write(),
-            new IfStatment()
-        };
-
-        private static readonly List<IKeyWords> FoldFunctions = new List<IKeyWords>
-        {
+            new IfStatment(),
             new Comparator(),
             new MatemticalOperator()
         };
@@ -25,50 +23,29 @@ namespace erlisp
             new Strings()
         };
 
-        static bool IsFunction(List<FoundKeyWord> skanedProgram)
+
+        private static void RemoveElement(List<FoundKeyWord> skanedProgram)
         {
-            return IsNonFoldFunction(skanedProgram) || IsFoldFunction(skanedProgram);
+            CodeGenerator.AddNextToken(skanedProgram.First());
+            skanedProgram.RemoveAt(0);
 
         }
 
-        private static bool IsFoldFunction(List<FoundKeyWord> skanedProgram)
+        static bool IsFunction(List<FoundKeyWord> skanedProgram)
         {
             var keyWordName = skanedProgram[0].GetKeyWordName();
 
-            if (FoldFunctions.All(x => x.KeyWordName() != keyWordName)) return false;
-            skanedProgram.RemoveAt(0);
+            if (Functions.All(x => x.KeyWordName() != keyWordName)) return false;
+            RemoveElement(skanedProgram);
 
-            while (IsAgrument(skanedProgram)){}
+            while (IsAgrument(skanedProgram))
+            {
+                CodeGenerator.AddNextToken(new FoundKeyWord(",", new Comma()));
+            }
 
             RemoveOptionalWhitespaces(skanedProgram);
             return skanedProgram[0].GetKeyWordName() == "ClosingBracket";
 
-        }
-
-        private static bool IsNonFoldFunction(List<FoundKeyWord> skanedProgram)
-        {
-            var keyWordName = skanedProgram[0].GetKeyWordName();
-            var numberOfArguments = -1;
-            foreach (var function in NonFoldFunctions)
-            {
-                if (function.KeyWordName() == keyWordName)
-                {
-                    numberOfArguments = function.NuberOfArguments();
-                }
-            }
-
-            if (numberOfArguments != -1)
-            {
-                skanedProgram.RemoveAt(0);
-                for (int i = 0; i < numberOfArguments; i++)
-                {
-                    if (!IsAgrument(skanedProgram)) return false;
-                }
-
-                return true;
-            }
-
-            return false;
         }
 
         static bool IsAgrument(List<FoundKeyWord> skanedProgram)
@@ -83,7 +60,7 @@ namespace erlisp
             var keyWordName = skanedProgram[0].GetKeyWordName();
             if (Expressions.Any(x => x.KeyWordName() == keyWordName))
             {
-                skanedProgram.RemoveAt(0);
+                RemoveElement(skanedProgram);
                 return true;
             }
 
@@ -95,12 +72,12 @@ namespace erlisp
             RemoveOptionalWhitespaces(skanedProgram);
 
             if (skanedProgram[0].GetKeyWordName() != "OpeningBracket") return false;
-            skanedProgram.RemoveAt(0);
+            RemoveElement(skanedProgram);
             RemoveOptionalWhitespaces(skanedProgram);
 
             if (skanedProgram[0].GetKeyWordName() == "ClosingBracket")
             {
-                skanedProgram.RemoveAt(0);
+                RemoveElement(skanedProgram);
                 return true;
             }
 
@@ -109,7 +86,7 @@ namespace erlisp
             RemoveOptionalWhitespaces(skanedProgram);
             if (skanedProgram[0].GetKeyWordName() == "ClosingBracket")
             {
-                skanedProgram.RemoveAt(0);
+                RemoveElement(skanedProgram);
                 return true;
             }
             return false;
@@ -117,7 +94,7 @@ namespace erlisp
 
         static void RemoveOptionalWhitespaces(List<FoundKeyWord> skanedProgram)
         {
-            if (skanedProgram[0].GetKeyWordName() == "WhiteSpaces") skanedProgram.RemoveAt(0);
+            if (skanedProgram[0].GetKeyWordName() == "WhiteSpaces") RemoveElement(skanedProgram);
         }
 
         public static bool Parse(List<FoundKeyWord> skanedProgram)
@@ -125,7 +102,10 @@ namespace erlisp
             while (skanedProgram.Any())
             {
                 if (!IsList(skanedProgram)) return false;
+                CodeGenerator.AddNextToken(new FoundKeyWord(".", new EndOfCode()));
             }
+
+            CodeGenerator.Reprocess();
             return true;
         }
     }
