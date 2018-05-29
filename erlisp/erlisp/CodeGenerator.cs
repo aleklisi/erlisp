@@ -9,21 +9,22 @@ namespace erlisp
 {
     public class CodeGenerator
     {
-        public static List<FoundKeyWord> _tokenzedProgram = new List<FoundKeyWord>();
+        public static List<FoundKeyWord> TokenzedProgram = new List<FoundKeyWord>();
         public static int FunCounter;
         public static int StackCounter;
+        public static bool InFun;
 
         public static void AddNextToken(FoundKeyWord token)
         {
-            _tokenzedProgram.Add(token);
+            TokenzedProgram.Add(token);
         }
 
-        public static List<FoundKeyWord> GetTokenizedProgram() => _tokenzedProgram;
+        public static List<FoundKeyWord> GetTokenizedProgram() => TokenzedProgram;
 
         public static void Reprocess()
         {
             RemoveExtraComma();
-            _tokenzedProgram = _tokenzedProgram.Where(x => x.GetKeyWordName() != "WhiteSpaces").ToList();
+            TokenzedProgram = TokenzedProgram.Where(x => x.GetKeyWordName() != "WhiteSpaces").ToList();
         }
 
         public static void RemoveExtraComma()
@@ -31,23 +32,60 @@ namespace erlisp
             var first = new Comma();
             var second = new ClosingBracket();
 
-            for (int i = 0; i < _tokenzedProgram.Count - 2; i++)
+            for (int i = 0; i < TokenzedProgram.Count - 3; i++)
             {
-                if (_tokenzedProgram[i].GetKeyWordName() == first.KeyWordName() &&
-                    _tokenzedProgram[i + 1].GetKeyWordName() == second.KeyWordName())
+                if (TokenzedProgram[i].GetKeyWordName() == first.KeyWordName() &&
+                    TokenzedProgram[i + 1].GetKeyWordName() == second.KeyWordName())
                 {
-                    _tokenzedProgram.RemoveAt(i);
+                    TokenzedProgram.RemoveAt(i);
                 }
             }
         }
         public static string GenerateCode()
         {
             var result = new StringBuilder();
-            foreach (var token in _tokenzedProgram)
+            for (var i = 0; i < TokenzedProgram.Count-1; i++)
             {
-                result.Append(GenerateCode(token));
+                if (TokenzedProgram[i].KeyWordType.KeyWordName() != "OpeningBracket" ||
+                    TokenzedProgram[i + 1].KeyWordType.KeyWordName() != "Function")
+                {
+                    result.Append(GenerateCode(TokenzedProgram[i]));
+                }
+                else
+                {
+                    InFun = true;
+                    while (TokenzedProgram[i].KeyWordType.KeyWordName() != "Variable") i++;
+                    result.Append(TokenzedProgram[i].FoundPattern.ToLower() + "(");
+                    i+=2;
+                    while (TokenzedProgram[i].KeyWordType.KeyWordName() == "Variable")
+                    {
+                        result.Append(TokenzedProgram[i].FoundPattern + ",");
+                        i += 1;
+                    }
+                    result.Length--;
+                    result.Append(")->");
+                    i++;
+                    while (TokenzedProgram[i].KeyWordType.KeyWordName() != "ClosingBracket")
+                    {
+                        result.Append(GenerateCode(TokenzedProgram[i]));
+                        i += 1;
+                    }
+                    if(result[result.Length-1] == ',') result.Length--;
+                    //while (StackCounter > 1)
+                    //{
+                    //    result.Append("])");
+                    //    StackCounter--;
+                    //}
+                    //result.Append(".");
+                    InFun = false;
+                }
             }
-
+            while (StackCounter > 1)
+            {
+                result.Append("])");
+                StackCounter--;
+            }
+            result.Append(".");
             return result.ToString();
         }
 
@@ -60,6 +98,7 @@ namespace erlisp
                 case "Comma":
                     return ",";
                 case "IfStatment":
+                    StackCounter++;
                     return "ifstm([";
                 case "MatemticalOperator":
                     return GenerateCodeMatematicalOperator(token);
@@ -74,18 +113,30 @@ namespace erlisp
                     return tokenPattern;
                 case "OpeningBracket":
                 {
-                    if (StackCounter++ == 0)
+                    if (!InFun)
+                    {
+                        if (StackCounter++ == 0)
                         {
                             FunCounter++;
                             return "fun" + FunCounter + "() -> ";
                         }
+                        }
+                    else
+                    {
+                        StackCounter++;
+                    }
 
                     return "";
                 }
                 case "Write":
+                    StackCounter++;
                     return "write([";
                 case "Comparator":
                     return GenerateCodeComperators(token);
+                case "Variable":
+                    return tokenPattern +",";
+                case "WhiteSpaces":
+                    return "";
                 default:
                     return "Not Implemeted";
             }

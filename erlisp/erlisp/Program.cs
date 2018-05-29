@@ -9,21 +9,28 @@ namespace erlisp
         public static void Main()
         {
             Console.WriteLine("Skaner Started!!!");
-            var textFromFile = "(+ 12 (-) (+ 1 2 (* 3)))";
+            var textFromFile = "(defun Name (Arga Argb Argc) (+ Arga Argb Argc))";
             var testSkaner = new LispScaner(textFromFile);
 
             try
             {
                 var tokenizeInput = testSkaner.TokenizeInput();
 
-                //PrintResults(tokenizeInput);
                 Console.WriteLine("Skaner Finished!!!");
                 Console.WriteLine("Parser Started!!!");
                 var parsed = Parser.Parse(tokenizeInput);
-                Console.WriteLine("Parser result is: " + parsed);
-                Console.WriteLine("Parser  Finished!!!");
-                PrintResults(CodeGenerator.GetTokenizedProgram());
-                Console.WriteLine(CodeGenerator.GenerateCode());
+                if (parsed)
+                {
+                    Console.WriteLine("Parser result is: " + true);
+                    Console.WriteLine("Parser  Finished!!!");
+                    Console.WriteLine(CodeGenerator.GenerateCode());
+                }
+                else
+                {
+                    Console.WriteLine("Parser result is: " + false);
+                    Console.WriteLine("Parser  Finished!!!");
+
+                }
             }
             catch (Exception e)
             {

@@ -19,7 +19,9 @@ namespace erlisp
             new MatemticalOperator(),
             new Comparator(),
             new IfStatment(),
-            new Write()
+            new Write(),
+            new Function(),
+            new Variable()
 
         };
         private string _input;

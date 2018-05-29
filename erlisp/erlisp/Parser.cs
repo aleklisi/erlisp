@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using erlisp.IKeyWord;
-using erlisp.IKeyWord.HelperKeyWord;
 
 namespace erlisp
 {
@@ -41,7 +39,6 @@ namespace erlisp
 
             while (IsAgrument(skanedProgram))
             {
-                CodeGenerator.AddNextToken(new FoundKeyWord(",", new Comma()));
             }
 
             RemoveOptionalWhitespaces(skanedProgram);
@@ -53,13 +50,51 @@ namespace erlisp
         {
             RemoveOptionalWhitespaces(skanedProgram);
 
-            return IsExpression(skanedProgram) || IsList(skanedProgram);
+            return IsExpression(skanedProgram) || IsList(skanedProgram) || IsVariable(skanedProgram);
         }
+
         static bool IsExpression(List<FoundKeyWord> skanedProgram)
         {
 
             var keyWordName = skanedProgram[0].GetKeyWordName();
             if (Expressions.Any(x => x.KeyWordName() == keyWordName))
+            {
+                RemoveElement(skanedProgram);
+                return true;
+            }
+
+            return false;
+        }
+
+        static bool IsFunctionDef(List<FoundKeyWord> skanedProgram)
+        {
+            if (skanedProgram[0].GetKeyWordName() != "OpeningBracket") return false;
+            RemoveElement(skanedProgram);
+            RemoveOptionalWhitespaces(skanedProgram);
+
+            if (skanedProgram[0].GetKeyWordName() != "Function") return false;
+            RemoveElement(skanedProgram);
+            RemoveOptionalWhitespaces(skanedProgram);
+
+            while (IsVariable(skanedProgram))
+            {
+            }
+
+            if (IsList(skanedProgram) &&
+                IsList(skanedProgram) &&
+                skanedProgram[0].GetKeyWordName() == "ClosingBracket")
+            {
+                RemoveElement(skanedProgram);
+                return true;
+            }
+
+            return false;
+        }
+
+        static bool IsVariable(List<FoundKeyWord> skanedProgram)
+        {
+            RemoveOptionalWhitespaces(skanedProgram);
+            if (skanedProgram[0].KeyWordType.KeyWordName() == "Variable")
             {
                 RemoveElement(skanedProgram);
                 return true;
@@ -82,9 +117,11 @@ namespace erlisp
                 return true;
             }
 
-            if (!IsFunction(skanedProgram)) return false;
-
+            if (!IsFunction(skanedProgram) && !IsVariable(skanedProgram)) return false;
             RemoveOptionalWhitespaces(skanedProgram);
+            while (IsVariable(skanedProgram))
+            {}
+
             if (skanedProgram[0].GetKeyWordName() == "ClosingBracket")
             {
                 RemoveElement(skanedProgram);
@@ -102,8 +139,14 @@ namespace erlisp
         {
             while (skanedProgram.Any())
             {
+                var lcp = new List<FoundKeyWord>(skanedProgram);
+
+                if (IsFunctionDef(lcp))
+                {
+                    skanedProgram = lcp;
+                    continue;
+                }
                 if (!IsList(skanedProgram)) return false;
-                CodeGenerator.AddNextToken(new FoundKeyWord(".", new EndOfCode()));
             }
 
             CodeGenerator.Reprocess();

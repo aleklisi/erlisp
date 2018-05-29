@@ -49,10 +49,12 @@
     <Compile Include="IKeyWord\ClosingBracket.cs" />
     <Compile Include="IKeyWord\Comparator.cs" />
     <Compile Include="IKeyWord\Floats.cs" />
+    <Compile Include="IKeyWord\Function.cs" />
     <Compile Include="IKeyWord\HelperKeyWord\Comma.cs" />
     <Compile Include="IKeyWord\HelperKeyWord\EndOfCode.cs" />
     <Compile Include="IKeyWord\IfStatment.cs" />
     <Compile Include="IKeyWord\Integers.cs" />
+    <Compile Include="IKeyWord\Variable.cs" />
     <Compile Include="IKeyWord\Write.cs" />
     <Compile Include="MatchingService.cs" />
     <Compile Include="IKeyWord\MatemticalOperator.cs" />
