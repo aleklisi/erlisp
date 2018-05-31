@@ -15,12 +15,13 @@ namespace erlisp
             new Floats(),
             new WhiteSpaces(),
             new OpeningBracket(),
+            new OpeningThread(),
             new ClosingBracket(),
+            new ClosingThread(),
             new MatemticalOperator(),
             new Comparator(),
             new IfStatment(),
-            new Write()
-
+            new Write(),
         };
         private string _input;
 

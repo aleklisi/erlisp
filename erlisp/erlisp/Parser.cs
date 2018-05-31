@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using erlisp.IKeyWord;
 using erlisp.IKeyWord.HelperKeyWord;
 
@@ -45,7 +44,8 @@ namespace erlisp
             }
 
             RemoveOptionalWhitespaces(skanedProgram);
-            return skanedProgram[0].GetKeyWordName() == "ClosingBracket";
+            return skanedProgram[0].GetKeyWordName() == "ClosingBracket" ||
+                   skanedProgram[0].GetKeyWordName() == "ClosingThread";
 
         }
 
@@ -53,7 +53,7 @@ namespace erlisp
         {
             RemoveOptionalWhitespaces(skanedProgram);
 
-            return IsExpression(skanedProgram) || IsList(skanedProgram);
+            return IsExpression(skanedProgram) || IsListOrThread(skanedProgram);
         }
         static bool IsExpression(List<FoundKeyWord> skanedProgram)
         {
@@ -68,15 +68,17 @@ namespace erlisp
             return false;
         }
 
-        static bool IsList(List<FoundKeyWord> skanedProgram)
+        static bool IsListOrThread(List<FoundKeyWord> skanedProgram)
         {
             RemoveOptionalWhitespaces(skanedProgram);
 
-            if (skanedProgram[0].GetKeyWordName() != "OpeningBracket") return false;
+            if (skanedProgram[0].GetKeyWordName() != "OpeningBracket" &&
+                skanedProgram[0].GetKeyWordName() != "OpeningThread") return false;
             RemoveElement(skanedProgram);
             RemoveOptionalWhitespaces(skanedProgram);
 
-            if (skanedProgram[0].GetKeyWordName() == "ClosingBracket")
+            if (skanedProgram[0].GetKeyWordName() == "ClosingBracket" ||
+                skanedProgram[0].GetKeyWordName() == "ClosingThred")
             {
                 RemoveElement(skanedProgram);
                 return true;
@@ -85,12 +87,10 @@ namespace erlisp
             if (!IsFunction(skanedProgram)) return false;
 
             RemoveOptionalWhitespaces(skanedProgram);
-            if (skanedProgram[0].GetKeyWordName() == "ClosingBracket")
-            {
-                RemoveElement(skanedProgram);
-                return true;
-            }
-            return false;
+            if (skanedProgram[0].GetKeyWordName() != "ClosingBracket" &&
+                skanedProgram[0].GetKeyWordName() != "ClosingThread") return false;
+            RemoveElement(skanedProgram);
+            return true;
         }
 
         static void RemoveOptionalWhitespaces(List<FoundKeyWord> skanedProgram)
@@ -102,7 +102,8 @@ namespace erlisp
         {
             while (skanedProgram.Any())
             {
-                if (!IsList(skanedProgram)) return false;
+                if (!IsListOrThread(skanedProgram))
+                    return false;
                 CodeGenerator.AddNextToken(new FoundKeyWord(".", new EndOfCode()));
             }
 

@@ -47,6 +47,7 @@
     <Compile Include="IFunction.cs" />
     <Compile Include="IKeyWords.cs" />
     <Compile Include="IKeyWord\ClosingBracket.cs" />
+    <Compile Include="IKeyWord\ClosingThread.cs" />
     <Compile Include="IKeyWord\Comparator.cs" />
     <Compile Include="IKeyWord\Floats.cs" />
     <Compile Include="IKeyWord\HelperKeyWord\Comma.cs" />
