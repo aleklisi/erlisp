@@ -5,6 +5,7 @@ using CodeGenerator = erlisp.CodeGenerator;
 
 namespace ScanerTests
 {
+
     public class CodeGeneratorTests
     {
         [TestCase("(+)", "fun1() -> sum([]).")]
@@ -16,6 +17,10 @@ namespace ScanerTests
         [TestCase("(write (write (write 2)))", "fun1() -> write([write([write([2])])]).")]
         [TestCase("(if (write (write 2)) 2 3)", "fun1() -> ifstm([write([write([2])]),2,3]).")]
         [TestCase("(+ 12 (-) (+ 1 2 (* 3)))", "fun1() -> sum([12,sub([]),sum([1,2,multiply([3])])]).")]
+
+        [TestCase("[write 3]", "fun1() -> spawn(write([3]).")]
+        [TestCase("[+ 1 2 3]", "fun1() -> spawn(sum([1,2,3]).")]
+        [TestCase("[write 3][write 3]", "fun1() -> spawn(write([3]).\r\nfun2() -> spawn(write([3]).")]
 
         public void TokenRecognizedCorrectly(string input, string expectedCode)
         {

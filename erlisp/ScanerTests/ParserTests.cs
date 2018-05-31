@@ -24,6 +24,17 @@ namespace ScanerTests
         [TestCase("(if ()()(+))")]
         [TestCase("(if ()1())")]
 
+        [TestCase("[write 3]")]
+        [TestCase("[if 1 2 3]")]
+        [TestCase("[if (+ 1 2 3) (write 6) (write 7)]")]
+        [TestCase("[if (+ 1 2 3) [write 6] [write 7]]")]
+        [TestCase("[if 1 2 3]")]
+        [TestCase("[if 1 2 3]")]
+        [TestCase("[+ 3]")]
+        [TestCase("[+ [- 3]]")]
+        [TestCase("[write [- 3]]")]
+        [TestCase("[write 3][write 4]")]
+        [TestCase("[write 3][write \"abc\"][write (+ 1 2 3)]")]
 
         public void TokenRecognizedCorrectly(string input)
         {

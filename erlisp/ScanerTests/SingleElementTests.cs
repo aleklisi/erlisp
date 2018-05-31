@@ -36,7 +36,11 @@ namespace ScanerTests
 
         [TestCase("(", "OpeningBracket")]
 
+        [TestCase("[", "OpeningThread")]
+
         [TestCase(")", "ClosingBracket")]
+
+        [TestCase("]", "ClosingThread")]
 
         [TestCase("+", "MatemticalOperator")]
         [TestCase("-", "MatemticalOperator")]

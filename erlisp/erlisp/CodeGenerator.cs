@@ -29,12 +29,14 @@ namespace erlisp
         public static void RemoveExtraComma()
         {
             var first = new Comma();
-            var second = new ClosingBracket();
+            var secondB = new ClosingBracket();
+            var secondT = new ClosingThread();
 
             for (int i = 0; i < _tokenzedProgram.Count - 2; i++)
             {
                 if (_tokenzedProgram[i].GetKeyWordName() == first.KeyWordName() &&
-                    _tokenzedProgram[i + 1].GetKeyWordName() == second.KeyWordName())
+                    (_tokenzedProgram[i + 1].GetKeyWordName() == secondB.KeyWordName() ||
+                     _tokenzedProgram[i + 1].GetKeyWordName() == secondT.KeyWordName()))
                 {
                     _tokenzedProgram.RemoveAt(i);
                 }
@@ -81,7 +83,18 @@ namespace erlisp
                         }
 
                     return "";
-                }
+                    }
+                case "OpeningThread":
+                    if (StackCounter++ == 0)
+                    {
+                        FunCounter++;
+                        return "fun" + FunCounter + "() -> spawn(";
+                    }
+                    return "";
+
+                case "ClosingThread":
+                    StackCounter--;
+                    return "])";
                 case "Write":
                     return "write([";
                 case "Comparator":
