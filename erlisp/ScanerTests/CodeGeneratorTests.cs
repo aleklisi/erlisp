@@ -20,7 +20,12 @@ namespace ScanerTests
 
         [TestCase("[write 3]", "fun1() -> spawn(write([3]).")]
         [TestCase("[+ 1 2 3]", "fun1() -> spawn(sum([1,2,3]).")]
-        [TestCase("[write 3][write 3]", "fun1() -> spawn(write([3]).\r\nfun2() -> spawn(write([3]).")]
+        [TestCase("[write 3][write 3]", "fun1() -> spawn(write([3]).fun2() -> spawn(write([3]).")]
+
+        [TestCase(")++(", "")]
+        [TestCase("(+)++(1 2 3)", "fun1() -> sum([1,2,3]).")]
+        [TestCase("(write)++(1 2 (write 2))", "fun1() -> write([1,2,write([2])]).")]
+        [TestCase("(+)++([+1] 2 3)", "fun1() -> sum([sum([1]),2,3]).")]
 
         public void TokenRecognizedCorrectly(string input, string expectedCode)
         {

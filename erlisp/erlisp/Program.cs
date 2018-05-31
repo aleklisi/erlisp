@@ -9,7 +9,7 @@ namespace erlisp
         public static void Main()
         {
             Console.WriteLine("Skaner Started!!!");
-            var textFromFile = "[write 3][write 3]";
+            var textFromFile = "()++()";
             var testSkaner = new LispScaner(textFromFile);
 
             try

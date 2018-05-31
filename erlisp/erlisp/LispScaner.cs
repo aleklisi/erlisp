@@ -22,6 +22,7 @@ namespace erlisp
             new Comparator(),
             new IfStatment(),
             new Write(),
+            new Concatenation(),
         };
         private string _input;
 
