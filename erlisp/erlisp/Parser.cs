@@ -97,11 +97,24 @@ namespace erlisp
         {
             if (skanedProgram[0].GetKeyWordName() == "WhiteSpaces") RemoveElement(skanedProgram);
         }
-
+        static void CheckConcat(List<FoundKeyWord> skanedProgram)
+        {
+            for (var i = 1; i < skanedProgram.Count-1; i++)
+            {
+                if (skanedProgram[i-1].KeyWordType.KeyWordName() == "ClosingBracket" &&
+                    skanedProgram[i].KeyWordType.KeyWordName() == "Concatenation"&&
+                    skanedProgram[i+1].KeyWordType.KeyWordName() == "OpeningBracket")
+                {
+                    skanedProgram.RemoveRange(i-1,3);
+                }
+            }   
+        }
         public static bool Parse(List<FoundKeyWord> skanedProgram)
         {
+            CheckConcat(skanedProgram);
             while (skanedProgram.Any())
             {
+                
                 if (!IsListOrThread(skanedProgram))
                     return false;
                 CodeGenerator.AddNextToken(new FoundKeyWord(".", new EndOfCode()));
