@@ -9,21 +9,21 @@ namespace erlisp
 {
     public class CodeGenerator
     {
-        public static List<FoundKeyWord> _tokenzedProgram = new List<FoundKeyWord>();
+        public static List<FoundKeyWord> TokenzedProgram = new List<FoundKeyWord>();
         public static int FunCounter;
         public static int StackCounter;
 
         public static void AddNextToken(FoundKeyWord token)
         {
-            _tokenzedProgram.Add(token);
+            TokenzedProgram.Add(token);
         }
 
-        public static List<FoundKeyWord> GetTokenizedProgram() => _tokenzedProgram;
+        public static List<FoundKeyWord> GetTokenizedProgram() => TokenzedProgram;
 
         public static void Reprocess()
         {
             RemoveExtraComma();
-            _tokenzedProgram = _tokenzedProgram.Where(x => x.GetKeyWordName() != "WhiteSpaces").ToList();
+            TokenzedProgram = TokenzedProgram.Where(x => x.GetKeyWordName() != "WhiteSpaces").ToList();
         }
 
         public static void RemoveExtraComma()
@@ -32,20 +32,33 @@ namespace erlisp
             var secondB = new ClosingBracket();
             var secondT = new ClosingThread();
 
-            for (int i = 0; i < _tokenzedProgram.Count - 2; i++)
+            for (int i = 0; i < TokenzedProgram.Count - 2; i++)
             {
-                if (_tokenzedProgram[i].GetKeyWordName() == first.KeyWordName() &&
-                    (_tokenzedProgram[i + 1].GetKeyWordName() == secondB.KeyWordName() ||
-                     _tokenzedProgram[i + 1].GetKeyWordName() == secondT.KeyWordName()))
+                if (TokenzedProgram[i].GetKeyWordName() == first.KeyWordName() &&
+                    (TokenzedProgram[i + 1].GetKeyWordName() == secondB.KeyWordName() ||
+                     TokenzedProgram[i + 1].GetKeyWordName() == secondT.KeyWordName()))
                 {
-                    _tokenzedProgram.RemoveAt(i);
+                    TokenzedProgram.RemoveAt(i);
                 }
             }
+        }
+
+        public static string GenerateMain()
+        {
+            StringBuilder main = new StringBuilder();
+            main.Append("main() -> ");
+            int i;
+            for (i = 1; i <= FunCounter-1; i++)
+            {
+                main.Append("fun" + i + "(),\n");
+            }
+            main.Append("fun" + i + "().");
+            return main.ToString();
         }
         public static string GenerateCode()
         {
             var result = new StringBuilder();
-            foreach (var token in _tokenzedProgram)
+            foreach (var token in TokenzedProgram)
             {
                 result.Append(GenerateCode(token));
             }

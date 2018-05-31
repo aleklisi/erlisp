@@ -42,7 +42,7 @@ namespace ScanerTests
         {
             CodeGenerator.StackCounter = 0;
             CodeGenerator.FunCounter = 0;
-            CodeGenerator._tokenzedProgram = new System.Collections.Generic.List<FoundKeyWord>();
+            CodeGenerator.TokenzedProgram = new System.Collections.Generic.List<FoundKeyWord>();
         }
     }
 }
