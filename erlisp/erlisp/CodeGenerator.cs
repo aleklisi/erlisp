@@ -72,6 +72,8 @@ namespace erlisp
             var tokenPattern = token.FoundPattern;
             switch (tokenType)
             {
+                case "Strings":
+                    return tokenPattern;
                 case "Comma":
                     return ",";
                 case "IfStatment":

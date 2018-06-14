@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using erlisp.IKeyWord;
 using erlisp.IKeyWord.HelperKeyWord;
 
@@ -24,6 +26,15 @@ namespace erlisp
         };
         public static List<FoundKeyWord> SkanedProgram = new List<FoundKeyWord>();
         public static FoundKeyWord CurrentSymbol;
+        private static int _lineCounter = 1;
+
+        private static void ExitWithExeption()
+        {
+            StringBuilder message = new StringBuilder();
+            message.Append("Parser error: No match for grammar");
+            message.Append(" in line " + _lineCounter);
+            throw new Exception(message.ToString());
+        }
 
         private static void RemoveElement()
         {
@@ -94,7 +105,11 @@ namespace erlisp
 
         static void RemoveOptionalWhitespaces()
         {
-            if (CurrentSymbol.GetKeyWordName() == "WhiteSpaces") RemoveElement();
+            if (CurrentSymbol.GetKeyWordName() == "WhiteSpaces")
+            {
+                RemoveElement();
+                _lineCounter += CurrentSymbol.FoundPattern.Count(c => c == '\n');
+            }
         }
 
         static bool IsInLineErlang()
@@ -112,9 +127,12 @@ namespace erlisp
 
             while (SkanedProgram.Any())
             {
-              
+
                 if (!IsInLineErlang() && !IsListOrThread())
+                {
+                    ExitWithExeption();
                     return false;
+                }
                 CodeGenerator.AddNextToken(new FoundKeyWord(".", new EndOfCode()));
             }
 

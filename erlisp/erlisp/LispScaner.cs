@@ -26,7 +26,7 @@ namespace erlisp
             new InLineErlang()
         };
         private string _input;
-
+        private static int _lineCounter = 1;
 
         public LispScaner(string input)
         {
@@ -83,11 +83,12 @@ namespace erlisp
         private static void ExitWithExeption(string errorMesage, int startChar)
         {
             StringBuilder message = new StringBuilder();
-            message.Append("No match or potencial match for ");
+            message.Append("Skaner error: No match or potencial match for ");
             message.Append(errorMesage);
             message.Append(" starting on ");
             message.Append(startChar);
             message.Append(" position");
+            message.Append(" line " + _lineCounter);
             throw new Exception(message.ToString());
         }
 
@@ -113,6 +114,7 @@ namespace erlisp
                 while (!IsEndOfInput(startPosition + lengthOfCurrentWord) &&
                        (AnyFullMatch(inputSubstring) || AnyPartilMatch(inputSubstring)))
                 {
+                    if (_input[startPosition + lengthOfCurrentWord] == '\n') _lineCounter++;
                     var fullMaches = GetAllFullMatches(inputSubstring);
                     currentPossibleFoundKeywordsList.AddRange(fullMaches);
                     lengthOfCurrentWord++;
