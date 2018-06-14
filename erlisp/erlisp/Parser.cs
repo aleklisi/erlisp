@@ -22,96 +22,97 @@ namespace erlisp
             new Floats(),
             new Strings()
         };
+        public static List<FoundKeyWord> SkanedProgram = new List<FoundKeyWord>();
 
-
-        private static void RemoveElement(List<FoundKeyWord> skanedProgram)
+        private static void RemoveElement()
         {
-            CodeGenerator.AddNextToken(skanedProgram.First());
-            skanedProgram.RemoveAt(0);
+            CodeGenerator.AddNextToken(SkanedProgram.First());
+            SkanedProgram.RemoveAt(0);
 
         }
 
-        static bool IsFunction(List<FoundKeyWord> skanedProgram)
+        static bool IsFunction()
         {
-            var keyWordName = skanedProgram.First().GetKeyWordName();
+            var keyWordName = SkanedProgram.First().GetKeyWordName();
 
             if (Functions.All(x => x.KeyWordName() != keyWordName)) return false;
-            RemoveElement(skanedProgram);
+            RemoveElement();
 
-            while (IsAgrument(skanedProgram))
+            while (IsAgrument())
             {
                 CodeGenerator.AddNextToken(new FoundKeyWord(",", new Comma()));
             }
 
-            RemoveOptionalWhitespaces(skanedProgram);
-            return skanedProgram.First().GetKeyWordName() == "ClosingBracket" ||
-                   skanedProgram.First().GetKeyWordName() == "ClosingThread";
+            RemoveOptionalWhitespaces();
+            return SkanedProgram.First().GetKeyWordName() == "ClosingBracket" ||
+                   SkanedProgram.First().GetKeyWordName() == "ClosingThread";
 
         }
 
-        static bool IsAgrument(List<FoundKeyWord> skanedProgram)
+        static bool IsAgrument()
         {
-            RemoveOptionalWhitespaces(skanedProgram);
+            RemoveOptionalWhitespaces();
 
-            return IsExpression(skanedProgram) || IsListOrThread(skanedProgram);
+            return IsExpression() || IsListOrThread();
         }
-        static bool IsExpression(List<FoundKeyWord> skanedProgram)
+        static bool IsExpression()
         {
 
-            var keyWordName = skanedProgram.First().GetKeyWordName();
+            var keyWordName = SkanedProgram.First().GetKeyWordName();
             if (Expressions.Any(x => x.KeyWordName() == keyWordName))
             {
-                RemoveElement(skanedProgram);
+                RemoveElement();
                 return true;
             }
 
             return false;
         }
 
-        static bool IsListOrThread(List<FoundKeyWord> skanedProgram)
+        static bool IsListOrThread()
         {
-            RemoveOptionalWhitespaces(skanedProgram);
+            RemoveOptionalWhitespaces();
 
-            if (skanedProgram.First().GetKeyWordName() != "OpeningBracket" &&
-                skanedProgram.First().GetKeyWordName() != "OpeningThread") return false;
-            RemoveElement(skanedProgram);
-            RemoveOptionalWhitespaces(skanedProgram);
+            if (SkanedProgram.First().GetKeyWordName() != "OpeningBracket" &&
+                SkanedProgram.First().GetKeyWordName() != "OpeningThread") return false;
+            RemoveElement();
+            RemoveOptionalWhitespaces();
 
-            if (skanedProgram.First().GetKeyWordName() == "ClosingBracket" ||
-                skanedProgram.First().GetKeyWordName() == "ClosingThred")
+            if (SkanedProgram.First().GetKeyWordName() == "ClosingBracket" ||
+                SkanedProgram.First().GetKeyWordName() == "ClosingThred")
             {
-                RemoveElement(skanedProgram);
+                RemoveElement();
                 return true;
             }
 
-            if (!IsFunction(skanedProgram)) return false;
+            if (!IsFunction()) return false;
 
-            RemoveOptionalWhitespaces(skanedProgram);
-            if (skanedProgram.First().GetKeyWordName() != "ClosingBracket" &&
-                skanedProgram.First().GetKeyWordName() != "ClosingThread") return false;
-            RemoveElement(skanedProgram);
+            RemoveOptionalWhitespaces();
+            if (SkanedProgram.First().GetKeyWordName() != "ClosingBracket" &&
+                SkanedProgram.First().GetKeyWordName() != "ClosingThread") return false;
+            RemoveElement();
             return true;
         }
 
-        static void RemoveOptionalWhitespaces(List<FoundKeyWord> skanedProgram)
+        static void RemoveOptionalWhitespaces()
         {
-            if (skanedProgram.First().GetKeyWordName() == "WhiteSpaces") RemoveElement(skanedProgram);
+            if (SkanedProgram.First().GetKeyWordName() == "WhiteSpaces") RemoveElement();
         }
 
-        static bool IsInLineErlang(List<FoundKeyWord> skanedProgram)
+        static bool IsInLineErlang()
         {
-            RemoveOptionalWhitespaces(skanedProgram);
-            if (skanedProgram.First().GetKeyWordName() != "InLineErlang") return false;
-            RemoveElement(skanedProgram);
+            RemoveOptionalWhitespaces();
+            if (SkanedProgram.First().GetKeyWordName() != "InLineErlang") return false;
+            RemoveElement();
             return true;
         }
 
-        public static bool Parse(List<FoundKeyWord> skanedProgram)
+        public static bool Parse(List<FoundKeyWord> inputProgram)
         {
-            while (skanedProgram.Any())
+            SkanedProgram = inputProgram;
+            while (SkanedProgram.Any())
             {
                 
-                if (!IsInLineErlang(skanedProgram) && !IsListOrThread(skanedProgram))
+                if (!IsInLineErlang() && !IsListOrThread())
                     return false;
                 CodeGenerator.AddNextToken(new FoundKeyWord(".", new EndOfCode()));
             }

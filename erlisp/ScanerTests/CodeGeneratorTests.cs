@@ -22,10 +22,12 @@ namespace ScanerTests
         [TestCase("[+ 1 2 3]", "fun1() -> spawn(sum([1,2,3]).")]
         [TestCase("[write 3][write 3]", "fun1() -> spawn(write([3]).fun2() -> spawn(write([3]).")]
 
-        [TestCase(")++(", "")]
-        [TestCase("(+)++(1 2 3)", "fun1() -> sum([1,2,3]).")]
-        [TestCase("(write)++(1 2 (write 2))", "fun1() -> write([1,2,write([2])]).")]
-        [TestCase("(+)++([+1] 2 3)", "fun1() -> sum([sum([1]),2,3]).")]
+        [TestCase("@@", ".")]
+        [TestCase("@example(X) -> X+2@", "example(X) -> X+2.")]
+        [TestCase("@example(X) -> X+2@", "example(X) -> X+2.")]
+        [TestCase("@example(3) -> 2; example(X) -> X+3@", "example(3) -> 2; example(X) -> X+3.")]
+        [TestCase("@example([]) -> []@", "example([]) -> [].")]
+        [TestCase("@define(TIMEOUT,5)@", "define(TIMEOUT,5).")]
 
         public void TokenRecognizedCorrectly(string input, string expectedCode)
         {
