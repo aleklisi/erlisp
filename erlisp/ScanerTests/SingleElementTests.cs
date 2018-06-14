@@ -59,6 +59,11 @@ namespace ScanerTests
 
         [TestCase("write", "Write")]
 
+        [TestCase("@@", "InLineErlang")]
+        [TestCase("@example(3) -> X - 1.@", "InLineErlang")]
+        [TestCase("@example(3) -> X - 1; \nexample(X) -> X + 2.@", "InLineErlang")]
+
+
 
         public void TokenRecognizedCorrectly(string input, string tokenName)
         {

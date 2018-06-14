@@ -23,6 +23,7 @@ namespace erlisp
             new IfStatment(),
             new Write(),
             new Concatenation(),
+            new InLineErlang()
         };
         private string _input;
 

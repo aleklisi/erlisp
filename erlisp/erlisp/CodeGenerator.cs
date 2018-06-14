@@ -32,7 +32,7 @@ namespace erlisp
             var secondB = new ClosingBracket();
             var secondT = new ClosingThread();
 
-            for (int i = 0; i < TokenzedProgram.Count - 2; i++)
+            for (var i = 0; i < TokenzedProgram.Count - 2; i++)
             {
                 if (TokenzedProgram[i].GetKeyWordName() == first.KeyWordName() &&
                     (TokenzedProgram[i + 1].GetKeyWordName() == secondB.KeyWordName() ||
@@ -45,7 +45,7 @@ namespace erlisp
 
         public static string GenerateMain()
         {
-            StringBuilder main = new StringBuilder();
+            var main = new StringBuilder();
             main.Append("main() -> ");
             int i;
             for (i = 1; i <= FunCounter-1; i++)
@@ -112,6 +112,8 @@ namespace erlisp
                     return "write([";
                 case "Comparator":
                     return GenerateCodeComperators(token);
+                case "InLineErlang":
+                    return token.FoundPattern.Remove(token.FoundPattern.Length-1,1).Remove(0,1);
                 default:
                     return "Not Implemeted";
             }
