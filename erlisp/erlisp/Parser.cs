@@ -23,17 +23,19 @@ namespace erlisp
             new Strings()
         };
         public static List<FoundKeyWord> SkanedProgram = new List<FoundKeyWord>();
+        public static FoundKeyWord CurrentSymbol;
 
         private static void RemoveElement()
         {
-            CodeGenerator.AddNextToken(SkanedProgram.First());
+            CodeGenerator.AddNextToken(CurrentSymbol);
             SkanedProgram.RemoveAt(0);
+            CurrentSymbol = SkanedProgram.FirstOrDefault();
 
         }
 
         static bool IsFunction()
         {
-            var keyWordName = SkanedProgram.First().GetKeyWordName();
+            var keyWordName = CurrentSymbol.GetKeyWordName();
 
             if (Functions.All(x => x.KeyWordName() != keyWordName)) return false;
             RemoveElement();
@@ -44,8 +46,8 @@ namespace erlisp
             }
 
             RemoveOptionalWhitespaces();
-            return SkanedProgram.First().GetKeyWordName() == "ClosingBracket" ||
-                   SkanedProgram.First().GetKeyWordName() == "ClosingThread";
+            return CurrentSymbol.GetKeyWordName() == "ClosingBracket" ||
+                   CurrentSymbol.GetKeyWordName() == "ClosingThread";
 
         }
 
@@ -58,27 +60,24 @@ namespace erlisp
         static bool IsExpression()
         {
 
-            var keyWordName = SkanedProgram.First().GetKeyWordName();
-            if (Expressions.Any(x => x.KeyWordName() == keyWordName))
-            {
-                RemoveElement();
-                return true;
-            }
+            var keyWordName = CurrentSymbol.GetKeyWordName();
+            if (Expressions.All(x => x.KeyWordName() != keyWordName)) return false;
+            RemoveElement();
+            return true;
 
-            return false;
         }
 
         static bool IsListOrThread()
         {
             RemoveOptionalWhitespaces();
 
-            if (SkanedProgram.First().GetKeyWordName() != "OpeningBracket" &&
-                SkanedProgram.First().GetKeyWordName() != "OpeningThread") return false;
+            if (CurrentSymbol.GetKeyWordName() != "OpeningBracket" &&
+                CurrentSymbol.GetKeyWordName() != "OpeningThread") return false;
             RemoveElement();
             RemoveOptionalWhitespaces();
 
-            if (SkanedProgram.First().GetKeyWordName() == "ClosingBracket" ||
-                SkanedProgram.First().GetKeyWordName() == "ClosingThred")
+            if (CurrentSymbol.GetKeyWordName() == "ClosingBracket" ||
+                CurrentSymbol.GetKeyWordName() == "ClosingThred")
             {
                 RemoveElement();
                 return true;
@@ -87,21 +86,21 @@ namespace erlisp
             if (!IsFunction()) return false;
 
             RemoveOptionalWhitespaces();
-            if (SkanedProgram.First().GetKeyWordName() != "ClosingBracket" &&
-                SkanedProgram.First().GetKeyWordName() != "ClosingThread") return false;
+            if (CurrentSymbol.GetKeyWordName() != "ClosingBracket" &&
+                CurrentSymbol.GetKeyWordName() != "ClosingThread") return false;
             RemoveElement();
             return true;
         }
 
         static void RemoveOptionalWhitespaces()
         {
-            if (SkanedProgram.First().GetKeyWordName() == "WhiteSpaces") RemoveElement();
+            if (CurrentSymbol.GetKeyWordName() == "WhiteSpaces") RemoveElement();
         }
 
         static bool IsInLineErlang()
         {
             RemoveOptionalWhitespaces();
-            if (SkanedProgram.First().GetKeyWordName() != "InLineErlang") return false;
+            if (CurrentSymbol.GetKeyWordName() != "InLineErlang") return false;
             RemoveElement();
             return true;
         }
@@ -109,9 +108,11 @@ namespace erlisp
         public static bool Parse(List<FoundKeyWord> inputProgram)
         {
             SkanedProgram = inputProgram;
+            CurrentSymbol = inputProgram.FirstOrDefault();
+
             while (SkanedProgram.Any())
             {
-                
+              
                 if (!IsInLineErlang() && !IsListOrThread())
                     return false;
                 CodeGenerator.AddNextToken(new FoundKeyWord(".", new EndOfCode()));
