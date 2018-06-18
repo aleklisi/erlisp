@@ -11,8 +11,14 @@ namespace erlisp
             string input;
             try
             {
-                //TODO fix file reada and accepting arguments
-                input = File.ReadAllText(true ? @".\example4.lisp" : args[0]);
+                
+                if (args.Length == 0)
+                {
+                    Console.WriteLine("Please provide filename as program argument!!!");
+                    Console.ReadKey();
+                    return;
+                }
+                input = File.ReadAllText(args[0]);
             }
             catch (Exception ex)
             {
